@@ -25,12 +25,43 @@ A powerful database MCP (Model Context Protocol) server with multi-data source m
 
 ## Installation
 
+### Method 1: Using uv (Recommended)
+
+[uv](https://docs.astral.sh/uv/) is a fast Python package installer and resolver written in Rust.
+
+```bash
+# Install uv first (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# or on Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Run directly with uvx (no installation needed)
+uvx database-mcp-server
+
+# Or install globally
+uv tool install database-mcp-server
+```
+
+### Method 2: Using pip
+
 ```bash
 # Install using pip
 pip install database-mcp-server
+```
 
-# Or using uv
-uvx database-mcp-server
+### Method 3: Development Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/database-mcp-python.git
+cd database-mcp-python
+
+# Install with uv
+uv sync
+uv run python -m src
+
+# Or install with pip
+pip install -e .
 ```
 
 ## Configuration
@@ -211,24 +242,35 @@ This will:
 
 ```
 database-mcp-python/
-├── src/
+├── README.md                        # Multi-language navigation homepage
+├── docs/                            # Documentation directory
+│   ├── README_en.md                 # Complete English documentation
+│   └── README_zh.md                 # Complete Chinese documentation
+├── src/                             # Source code directory
 │   ├── __init__.py                  # MCP service main entry point
-│   ├── factory/
+│   ├── factory/                     # Factory pattern implementations
+│   │   ├── __init__.py
 │   │   ├── config_loader.py         # Configuration loader with caching
 │   │   ├── database_factory.py      # Database strategy factory
 │   │   └── datasource_manager.py    # Multi-data source manager
-│   ├── strategy/
+│   ├── strategy/                    # Strategy pattern implementations
+│   │   ├── __init__.py
 │   │   ├── database_strategy.py     # Abstract database strategy base class
 │   │   └── mysql_strategy.py        # MySQL strategy implementation
-│   ├── model/
+│   ├── model/                       # Data model definitions
+│   │   ├── __init__.py
 │   │   └── database_config.py       # Database configuration model
-│   └── tools/
+│   └── tools/                       # Utility tools and helpers
 │       └── mysql_tools.py           # MySQL utility methods for SQL generation
+├── test/                            # Test directory
+│   └── test_datasource.py           # Comprehensive testing script
 ├── database-config.example.yaml    # Configuration file example
-├── .env.example                     # Environment variables example
-├── pyproject.toml                   # Project configuration
-├── test_datasource.py               # Testing script
-└── README.md                        # Multi-language navigation
+├── pyproject.toml                   # Python project configuration
+├── uv.lock                          # UV package manager lock file
+├── package.json                     # Node.js configuration (optional)
+├── package-lock.json                # Node.js dependencies lock (optional)
+├── CLAUDE.md                        # Project instructions for Claude
+└── LICENSE                          # MIT License file
 ```
 
 ## Key Features in Detail

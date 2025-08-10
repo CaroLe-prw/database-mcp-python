@@ -25,12 +25,43 @@
 
 ## 安装
 
+### 方式一：使用 uv（推荐）
+
+[uv](https://docs.astral.sh/uv/) 是用 Rust 编写的快速 Python 包安装器和解析器。
+
+```bash
+# 首先安装 uv（如果尚未安装）
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# 或在 Windows 上
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# 使用 uvx 直接运行（无需安装）
+uvx database-mcp-server
+
+# 或者全局安装
+uv tool install database-mcp-server
+```
+
+### 方式二：使用 pip
+
 ```bash
 # 使用 pip 安装
 pip install database-mcp-server
+```
 
-# 或使用 uv
-uvx database-mcp-server
+### 方式三：开发环境安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/your-username/database-mcp-python.git
+cd database-mcp-python
+
+# 使用 uv 安装
+uv sync
+uv run python -m src
+
+# 或使用 pip 安装
+pip install -e .
 ```
 
 ## 配置方式
@@ -211,24 +242,35 @@ DATABASE_CONFIG_FILE="./config/my-database-config.yaml"
 
 ```
 database-mcp-python/
-├── src/
+├── README.md                        # 多语言导航主页
+├── docs/                            # 文档目录
+│   ├── README_en.md                 # 完整英文文档
+│   └── README_zh.md                 # 完整中文文档
+├── src/                             # 源代码目录
 │   ├── __init__.py                  # MCP 服务主入口
-│   ├── factory/
+│   ├── factory/                     # 工厂模式实现
+│   │   ├── __init__.py
 │   │   ├── config_loader.py         # 带缓存的配置加载器
 │   │   ├── database_factory.py      # 数据库策略工厂
 │   │   └── datasource_manager.py    # 多数据源管理器
-│   ├── strategy/
+│   ├── strategy/                    # 策略模式实现
+│   │   ├── __init__.py
 │   │   ├── database_strategy.py     # 抽象数据库策略基类
 │   │   └── mysql_strategy.py        # MySQL 策略实现
-│   ├── model/
+│   ├── model/                       # 数据模型定义
+│   │   ├── __init__.py
 │   │   └── database_config.py       # 数据库配置模型
-│   └── tools/
+│   └── tools/                       # 工具类和辅助函数
 │       └── mysql_tools.py           # MySQL SQL 生成工具方法
+├── test/                            # 测试目录
+│   └── test_datasource.py           # 综合测试脚本
 ├── database-config.example.yaml    # 配置文件示例
-├── .env.example                     # 环境变量示例
-├── pyproject.toml                   # 项目配置
-├── test_datasource.py               # 测试脚本
-└── README.md                        # 英文说明文档
+├── pyproject.toml                   # Python 项目配置
+├── uv.lock                          # UV 包管理器锁定文件
+├── package.json                     # Node.js 配置（可选）
+├── package-lock.json                # Node.js 依赖锁定（可选）
+├── CLAUDE.md                        # Claude 项目说明
+└── LICENSE                          # MIT 许可证文件
 ```
 
 ## 关键功能详述

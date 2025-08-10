@@ -39,11 +39,16 @@ Please choose your preferred language for detailed documentation:
 ## ⚡ Quick Installation | 快速安装
 
 ```bash
-# Install using pip | 使用 pip 安装
-pip install database-mcp-server
-
-# Or using uv | 或使用 uv
+# Using uv (recommended) | 使用 uv（推荐）
 uvx database-mcp-server
+
+# Or install uv first | 或者先安装 uv
+curl -LsSf https://astral.sh/uv/install.sh | sh  # Linux/macOS
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"  # Windows
+uv tool install database-mcp-server
+
+# Traditional pip installation | 传统 pip 安装
+pip install database-mcp-server
 ```
 
 ## 📁 Project Structure | 项目结构
@@ -60,8 +65,13 @@ database-mcp-python/
 │   ├── strategy/                    # Strategy pattern | 策略模式
 │   ├── model/                       # Data models | 数据模型
 │   └── tools/                       # Utility tools | 工具类
+├── test/                            # Test directory | 测试目录
+│   └── test_datasource.py           # Testing script | 测试脚本
 ├── database-config.example.yaml     # Config example | 配置示例
-└── pyproject.toml                   # Project config | 项目配置
+├── pyproject.toml                   # Project config | 项目配置
+├── uv.lock                          # UV lock file | UV 锁定文件
+├── CLAUDE.md                        # Project notes | 项目说明
+└── LICENSE                          # MIT License | MIT 许可证
 ```
 
 ## 🔗 Quick Links | 快速链接
