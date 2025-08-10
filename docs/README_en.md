@@ -302,6 +302,25 @@ Robust error handling throughout the application:
 
 ## Development
 
+### Using uv (Recommended)
+
+```bash
+# Clone repository
+git clone https://github.com/your-username/database-mcp-python.git
+cd database-mcp-python
+
+# Install dependencies with uv
+uv sync
+
+# Run tests
+uv run python test/test_datasource.py
+
+# Or run the MCP server
+uv run python -m src
+```
+
+### Using pip (Traditional)
+
 ```bash
 # Clone repository
 git clone https://github.com/your-username/database-mcp-python.git
@@ -311,7 +330,7 @@ cd database-mcp-python
 pip install -e .
 
 # Run tests
-python test_datasource.py
+python test/test_datasource.py
 ```
 
 ## Testing

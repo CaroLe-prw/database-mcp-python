@@ -302,6 +302,25 @@ database-mcp-python/
 
 ## 开发
 
+### 使用 uv（推荐）
+
+```bash
+# 克隆仓库
+git clone https://github.com/your-username/database-mcp-python.git
+cd database-mcp-python
+
+# 使用 uv 安装依赖
+uv sync
+
+# 运行测试
+uv run python test/test_datasource.py
+
+# 或运行 MCP 服务器
+uv run python -m src
+```
+
+### 使用 pip（传统方式）
+
 ```bash
 # 克隆仓库
 git clone https://github.com/your-username/database-mcp-python.git
@@ -311,7 +330,7 @@ cd database-mcp-python
 pip install -e .
 
 # 运行测试
-python test_datasource.py
+python test/test_datasource.py
 ```
 
 ## 测试
