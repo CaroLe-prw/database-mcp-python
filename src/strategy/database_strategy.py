@@ -174,7 +174,7 @@ class DatabaseStrategy(ABC):
         result = []
 
         if not rows:
-            return ""
+            return "No data found"
 
         def get_display_width(text: str) -> int:
             """Calculate display width of string, Chinese characters count as 2 width units"""
@@ -243,6 +243,43 @@ class DatabaseStrategy(ABC):
 
         return sql_content
 
+    @staticmethod
+    def generate_alter_statements(table_name: str, my_structure: dict, other_structure: dict,
+                                  tools_class, compare_method_name: str = 'compare_columns') -> list:
+        """
+        Generate ALTER TABLE SQL statements for synchronizing table structures
+        
+        Args:
+            table_name: Table name
+            my_structure: Source table structure
+            other_structure: Target table structure
+            tools_class: Database-specific tools class (MySQLTools or PostgreSQLTools)
+            compare_method_name: Name of the comparison method to use (default: 'compare_columns')
+            
+        Returns:
+            List of ALTER TABLE SQL statements
+        """
+        # Get the comparison method from tools class
+        compare_method = getattr(tools_class, compare_method_name)
+
+        # Compare field differences
+        only_in_mine, only_in_other, different_cols = compare_method(my_structure, other_structure)
+        alter_statements = []
+
+        # Add columns that only exist in source to target
+        for col in sorted(only_in_mine):
+            col_info = my_structure[col]
+            sql = tools_class.generate_add_column_sql(table_name, col, col_info)
+            alter_statements.append(sql)
+
+        # Modify columns with different attributes
+        for col in sorted(different_cols):
+            my_info = my_structure[col]
+            sql = tools_class.generate_modify_column_sql(table_name, col, my_info)
+            alter_statements.append(sql)
+
+        return alter_statements
+
     def format_comparison_result(self, table_name: str, my_structure: dict, other_structure: dict,
                                  other_strategy: 'DatabaseStrategy', sql_file_path: str = None) -> str:
         """Format table structure comparison result
@@ -257,7 +294,8 @@ class DatabaseStrategy(ABC):
         Returns:
             Formatted comparison result string
         """
-        result = [f"Table Structure Comparison: {table_name}", "=" * 60, f"Data Source 1: {self.config.database}@{self.config.host}",
+        result = [f"Table Structure Comparison: {table_name}", "=" * 60,
+                  f"Data Source 1: {self.config.database}@{self.config.host}",
                   f"Data Source 2: {other_strategy.config.database}@{other_strategy.config.host}", "=" * 60]
 
         # Get column sets

@@ -19,7 +19,7 @@
 ## 支持的数据库
 
 - ✅ MySQL / MariaDB
-- 🔄 PostgreSQL（计划中）
+- ✅ PostgreSQL
 - 🔄 Oracle（计划中）
 - 🔄 SQL Server（计划中）
 
@@ -104,6 +104,19 @@ datasources:
     password: test_password
     database: test_db
 
+  # PostgreSQL 数据库
+  postgres_db:
+    type: postgresql  # 使用 'postgresql'
+    host: localhost
+    port: 5432
+    user: postgres
+    password: postgres_password
+    database: my_database  # PostgreSQL 实际数据库名
+    # 可选：连接池配置
+    minCached: 5
+    maxCached: 10
+    maxConnections: 20
+
 # 默认数据源
 default: main_db
 ```
@@ -158,6 +171,8 @@ DATABASE_CONFIG_FILE="./config/my-database-config.yaml"
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
+#### 方式一：使用配置文件（推荐，支持多数据源）
+
 ```json
 {
   "mcpServers": {
@@ -168,6 +183,79 @@ DATABASE_CONFIG_FILE="./config/my-database-config.yaml"
       ],
       "env": {
         "DATABASE_CONFIG_FILE": "C:/path/to/database-config.yaml"
+      }
+    }
+  }
+}
+```
+
+#### 方式二：使用环境变量（单数据源，向后兼容）
+
+```json
+{
+  "mcpServers": {
+    "database": {
+      "command": "uvx",
+      "args": [
+        "database-mcp-server"
+      ],
+      "env": {
+        "db_type": "mysql",
+        "host": "localhost",
+        "port": "3306",
+        "user": "root",
+        "password": "password",
+        "database": "my_database"
+      }
+    }
+  }
+}
+```
+
+注意：如果同时存在 `DATABASE_CONFIG_FILE` 和数据库连接环境变量，优先使用配置文件。
+
+### Cursor 配置
+
+编辑 Cursor 配置文件：
+
+**Windows**: `%APPDATA%\Cursor\User\globalStorage\cursor-ai\settings.json`
+**macOS**: `~/Library/Application Support/Cursor/User/globalStorage/cursor-ai/settings.json`
+
+#### 方式一：使用配置文件（推荐，支持多数据源）
+
+```json
+{
+  "mcpServers": {
+    "database": {
+      "command": "uvx",
+      "args": [
+        "database-mcp-server"
+      ],
+      "env": {
+        "DATABASE_CONFIG_FILE": "C:/path/to/database-config.yaml"
+      }
+    }
+  }
+}
+```
+
+#### 方式二：使用环境变量（单数据源，向后兼容）
+
+```json
+{
+  "mcpServers": {
+    "database": {
+      "command": "uvx",
+      "args": [
+        "database-mcp-server"
+      ],
+      "env": {
+        "db_type": "postgresql",
+        "host": "localhost",
+        "port": "5432",
+        "user": "postgres",
+        "password": "password",
+        "database": "my_database"
       }
     }
   }
@@ -256,12 +344,15 @@ database-mcp-python/
 │   ├── strategy/                    # 策略模式实现
 │   │   ├── __init__.py
 │   │   ├── database_strategy.py     # 抽象数据库策略基类
-│   │   └── mysql_strategy.py        # MySQL 策略实现
+│   │   ├── mysql_strategy.py        # MySQL 策略实现
+│   │   └── postgresql_strategy.py   # PostgreSQL 策略实现
 │   ├── model/                       # 数据模型定义
 │   │   ├── __init__.py
 │   │   └── database_config.py       # 数据库配置模型
 │   └── tools/                       # 工具类和辅助函数
-│       └── mysql_tools.py           # MySQL SQL 生成工具方法
+│       ├── common_tools.py          # 通用数据库工具方法
+│       ├── mysql_tools.py           # MySQL SQL 生成工具方法
+│       └── postgresql_tools.py      # PostgreSQL SQL 生成工具方法
 ├── test/                            # 测试目录
 │   └── test_datasource.py           # 综合测试脚本
 ├── database-config.example.yaml    # 配置文件示例

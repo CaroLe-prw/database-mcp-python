@@ -24,6 +24,20 @@ def list_tables(datasource: Optional[str] = None) -> str:
         return f"Failed to list tables: {str(e)}"
 
 
+def describe_table(table_name: str, datasource: Optional[str] = None) -> str:
+    """Show the schema and column information for a given table
+
+    Args:
+        table_name: Name of the table to describe
+        datasource: Optional data source name, uses default if None
+    """
+    try:
+        strategy = manager.get_data_source(datasource)
+        return strategy.describe_Table(table_name)
+    except Exception as e:
+        return f"Failed to describe table: {str(e)}"
+
+
 def compare_table_structure(
         table_name: str,
         source1: str,
@@ -56,6 +70,44 @@ def compare_table_structure(
         return f"Table structure comparison failed: {str(e)}"
 
 
+def execute_sql(
+        sql: str,
+        datasource: Optional[str] = None,
+        params: Optional[tuple] = None
+) -> str:
+    """Execute SQL statement and return results
+
+    Args:
+        sql: SQL query to execute
+        datasource: Optional data source name, uses default if None
+        params: Optional parameters for parameterized queries
+    """
+    try:
+        strategy = manager.get_data_source(datasource)
+        return strategy.execute_sql(sql, params)
+    except Exception as e:
+        return f"Failed to execute SQL: {str(e)}"
+
+
+def export_data(
+        table_name: str,
+        datasource: Optional[str] = None,
+        file_path: Optional[str] = None
+) -> str:
+    """Export table data to SQL file
+
+    Args:
+        table_name: Name of the table to export
+        datasource: Optional data source name, uses default if None
+        file_path: Optional file path, defaults to export_data/ directory
+    """
+    try:
+        strategy = manager.get_data_source(datasource)
+        return strategy.export_data(table_name, file_path)
+    except Exception as e:
+        return f"Failed to export data: {str(e)}"
+
+
 def execute_sql_file(
         file_path: str,
         datasource: Optional[str] = None
@@ -74,25 +126,7 @@ def execute_sql_file(
 
 
 def main():
-    # Test table structure comparison and generate ALTER TABLE SQL
-    print("\n" + "=" * 60)
-    print("Table Structure Comparison (Generate ALTER TABLE SQL):")
-    print("=" * 60)
-    result = compare_table_structure("undo_log", "admin_db", "order_db", generate_sql=True)
-
-    # Filter out lines with special characters, only print key information
-    lines = result.split('\n')
-    for line in lines:
-        try:
-            print(line)
-        except UnicodeEncodeError:
-            # Skip lines that cannot be printed
-            if '✅' in line:
-                print("Table structures are identical in both data sources!")
-            elif '⚠' in line:
-                print("Structural differences found, please check details above.")
-            else:
-                pass
+    print(compare_table_structure('order', 'postgresql_test_db', 'postgresql_db', generate_sql=True))
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ A powerful database MCP (Model Context Protocol) server with multi-data source m
 ## Supported Databases
 
 - ✅ MySQL / MariaDB
-- 🔄 PostgreSQL (planned)
+- ✅ PostgreSQL
 - 🔄 Oracle (planned)
 - 🔄 SQL Server (planned)
 
@@ -104,6 +104,19 @@ datasources:
     password: test_password
     database: test_db
 
+  # PostgreSQL database
+  postgres_db:
+    type: postgresql  # use 'postgresql' 
+    host: localhost
+    port: 5432
+    user: postgres
+    password: postgres_password
+    database: my_database  # PostgreSQL actual database name
+    # Optional: connection pool settings
+    minCached: 5
+    maxCached: 10
+    maxConnections: 20
+
 # Default data source
 default: main_db
 ```
@@ -158,6 +171,8 @@ Edit Claude Desktop configuration file:
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
+#### Method 1: Using Configuration File (Recommended, supports multi-data sources)
+
 ```json
 {
   "mcpServers": {
@@ -168,6 +183,79 @@ Edit Claude Desktop configuration file:
       ],
       "env": {
         "DATABASE_CONFIG_FILE": "C:/path/to/database-config.yaml"
+      }
+    }
+  }
+}
+```
+
+#### Method 2: Using Environment Variables (Single data source, backward compatible)
+
+```json
+{
+  "mcpServers": {
+    "database": {
+      "command": "uvx",
+      "args": [
+        "database-mcp-server"
+      ],
+      "env": {
+        "db_type": "mysql",
+        "host": "localhost",
+        "port": "3306",
+        "user": "root",
+        "password": "password",
+        "database": "my_database"
+      }
+    }
+  }
+}
+```
+
+Note: If both `DATABASE_CONFIG_FILE` and database connection environment variables exist, the configuration file takes priority.
+
+### Cursor Configuration
+
+Edit Cursor configuration file:
+
+**Windows**: `%APPDATA%\Cursor\User\globalStorage\cursor-ai\settings.json`
+**macOS**: `~/Library/Application Support/Cursor/User/globalStorage/cursor-ai/settings.json`
+
+#### Method 1: Using Configuration File (Recommended, supports multi-data sources)
+
+```json
+{
+  "mcpServers": {
+    "database": {
+      "command": "uvx",
+      "args": [
+        "database-mcp-server"
+      ],
+      "env": {
+        "DATABASE_CONFIG_FILE": "C:/path/to/database-config.yaml"
+      }
+    }
+  }
+}
+```
+
+#### Method 2: Using Environment Variables (Single data source, backward compatible)
+
+```json
+{
+  "mcpServers": {
+    "database": {
+      "command": "uvx",
+      "args": [
+        "database-mcp-server"
+      ],
+      "env": {
+        "db_type": "postgresql",
+        "host": "localhost",
+        "port": "5432",
+        "user": "postgres",
+        "password": "password",
+        "database": "my_database"
       }
     }
   }
@@ -256,12 +344,15 @@ database-mcp-python/
 │   ├── strategy/                    # Strategy pattern implementations
 │   │   ├── __init__.py
 │   │   ├── database_strategy.py     # Abstract database strategy base class
-│   │   └── mysql_strategy.py        # MySQL strategy implementation
+│   │   ├── mysql_strategy.py        # MySQL strategy implementation
+│   │   └── postgresql_strategy.py   # PostgreSQL strategy implementation
 │   ├── model/                       # Data model definitions
 │   │   ├── __init__.py
 │   │   └── database_config.py       # Database configuration model
 │   └── tools/                       # Utility tools and helpers
-│       └── mysql_tools.py           # MySQL utility methods for SQL generation
+│       ├── common_tools.py          # Common database utility methods
+│       ├── mysql_tools.py           # MySQL SQL generation utility methods
+│       └── postgresql_tools.py      # PostgreSQL SQL generation utility methods
 ├── test/                            # Test directory
 │   └── test_datasource.py           # Comprehensive testing script
 ├── database-config.example.yaml    # Configuration file example

@@ -1,12 +1,13 @@
 from typing import Dict, Type
 
 from src.model import DatabaseConfig
-from src.strategy import DatabaseStrategy, MySQLStrategy
+from src.strategy import DatabaseStrategy, MySQLStrategy, PostgreSQLStrategy
 
 
 class DatabaseStrategyFactory:
     _strategies: Dict[str, Type[DatabaseStrategy]] = {
         "mysql": MySQLStrategy,
+        "postgresql": PostgreSQLStrategy,
     }
 
     @classmethod
