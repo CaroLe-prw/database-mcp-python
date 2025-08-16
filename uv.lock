@@ -177,6 +177,7 @@ dependencies = [
     { name = "dbutils" },
     { name = "fastmcp" },
     { name = "mcp", extra = ["cli"] },
+    { name = "oracledb" },
     { name = "psycopg2" },
     { name = "psycopg2-binary" },
     { name = "pymysql" },
@@ -189,6 +190,7 @@ requires-dist = [
     { name = "dbutils", specifier = ">=3.1.1" },
     { name = "fastmcp", specifier = ">=2.11.0" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.12.2" },
+    { name = "oracledb", specifier = ">=2.0.0" },
     { name = "psycopg2", specifier = ">=2.9.10" },
     { name = "psycopg2-binary", specifier = ">=2.9.9" },
     { name = "pymysql", specifier = ">=1.1.1" },
@@ -540,6 +542,27 @@ dependencies = [
 sdist = { url = "http://mirrors.aliyun.com/pypi/packages/82/af/fe2d7618d6eae6fb3a82766a44ed87cd8d6d82b4564ed1c7cfb0f6378e91/openapi_spec_validator-0.7.2.tar.gz", hash = "sha256:cc029309b5c5dbc7859df0372d55e9d1ff43e96d678b9ba087f7c56fc586f734" }
 wheels = [
     { url = "http://mirrors.aliyun.com/pypi/packages/27/dd/b3fd642260cb17532f66cc1e8250f3507d1e580483e209dc1e9d13bd980d/openapi_spec_validator-0.7.2-py3-none-any.whl", hash = "sha256:4bbdc0894ec85f1d1bea1d6d9c8b2c3c8d7ccaa13577ef40da9c006c9fd0eb60" },
+]
+
+[[package]]
+name = "oracledb"
+version = "3.3.0"
+source = { registry = "http://mirrors.aliyun.com/pypi/simple" }
+dependencies = [
+    { name = "cryptography" },
+]
+sdist = { url = "http://mirrors.aliyun.com/pypi/packages/51/c9/fae18fa5d803712d188486f8e86ad4f4e00316793ca19745d7c11092c360/oracledb-3.3.0.tar.gz", hash = "sha256:e830d3544a1578296bcaa54c6e8c8ae10a58c7db467c528c4b27adbf9c8b4cb0" }
+wheels = [
+    { url = "http://mirrors.aliyun.com/pypi/packages/3d/03/4d9fe4e8c6e54956be898e3caad4412de441e502a2679bb5ce8802db5078/oracledb-3.3.0-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:6abc3e4432350839ecb98527707f4929bfb58959159ea440977f621e0db82ac6" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/22/42/217c3b79c2e828c73435200f226128027e866ddb2e9124acf7e55b6ed16c/oracledb-3.3.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:6770dabc441adce5c865c9f528992a7228b2e5e59924cbd8588eb159f548fc38" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/a7/a8/755569f456abd62fb50ca4716cd5c8a7f4842899f587dba751108111ff1d/oracledb-3.3.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:55af5a49db7cbd03cef449ac51165d9aa30f26064481d68a653c81cc5a29ae80" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/e0/2a/aaeef4f71cdfb0528f53af3a29a1235f243f23b46aadb9dbf4b95f5e4853/oracledb-3.3.0-cp313-cp313-win32.whl", hash = "sha256:5b4a68e4d783186cea9236fb0caa295f6da382ba1b80ca7f86d2d045cf29a993" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/c8/ae/2ef3a3592360aaf9a3f816ccd814f9ad23966e100b06dabc40ea7cf01118/oracledb-3.3.0-cp313-cp313-win_amd64.whl", hash = "sha256:ad63c0057d3f764cc2d96d4f6445b89a8ea59b42ed80f719d689292392ce62a3" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/0c/a5/05347b113123245ead81501bcc25913ac8918c5b7c645deb1d6b9f32fbe3/oracledb-3.3.0-cp314-cp314-macosx_11_0_universal2.whl", hash = "sha256:4c574a34a79934b9c6c3f5e4c715053ad3b46e18da38ec28d9c767e0541422ea" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/4c/b9/11984a701960f1f8a3efd3980c4d50c8b56d3f3f338614a76521a6d5f61c/oracledb-3.3.0-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:172217e7511c58d8d3c09e9385f7d51696de27e639f336ba0a65d15009cd8cda" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/b3/56/0eef985b490e7018f501dc39af12c0023360f18e3b9b0ae14809e95487e8/oracledb-3.3.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d450dcada7711007a9a8a2770f81b54c24ba1e1d2456643c3fae7a2ff26b3a29" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/69/ed/83f786041a9ab8aee157156ce2526b332e603086f1ec2dfa3e8553c8204b/oracledb-3.3.0-cp314-cp314-win32.whl", hash = "sha256:b19ca41b3344dc77c53f74d31e0ca442734314593c4bec578a62efebdb1b59d7" },
+    { url = "http://mirrors.aliyun.com/pypi/packages/59/78/9627eb1630cb60b070889fce71b90e81ed276f678a1c4dfe2dccefab73f3/oracledb-3.3.0-cp314-cp314-win_amd64.whl", hash = "sha256:a410dcf69b18ea607f3aed5cb4ecdebeb7bfb5f86e746c09a864c0f5bd563279" },
 ]
 
 [[package]]

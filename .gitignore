@@ -210,3 +210,5 @@ __marimo__/
 #claude code
 CLAUDE.md
 .python-version
+.serena/
+.claude/

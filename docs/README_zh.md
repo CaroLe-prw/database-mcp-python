@@ -20,7 +20,7 @@
 
 - ✅ MySQL / MariaDB
 - ✅ PostgreSQL
-- 🔄 Oracle（计划中）
+- ✅ Oracle
 - 🔄 SQL Server（计划中）
 
 ## 安装
@@ -116,6 +116,19 @@ datasources:
     minCached: 5
     maxCached: 10
     maxConnections: 20
+
+  # Oracle 数据库
+  oracle_db:
+    type: oracle
+    host: localhost
+    port: 1521
+    user: system
+    password: oracle_password
+    database: xe  # Oracle 数据库名
+    # 可选：连接池配置
+    minCached: 2
+    maxCached: 8
+    maxConnections: 15
 
 # 默认数据源
 default: main_db
@@ -250,12 +263,12 @@ DATABASE_CONFIG_FILE="./config/my-database-config.yaml"
         "database-mcp-server"
       ],
       "env": {
-        "db_type": "postgresql",
+        "db_type": "oracle",
         "host": "localhost",
-        "port": "5432",
-        "user": "postgres",
+        "port": "1521",
+        "user": "system",
         "password": "password",
-        "database": "my_database"
+        "database": "xe"
       }
     }
   }
@@ -442,6 +455,14 @@ MIT License
 欢迎提交 Issue 和 Pull Request！
 
 ## 更新日志
+
+### v1.0.2
+
+- ✅ **Oracle 数据库支持**：完整的 Oracle 数据库支持实现
+- ✅ **增强配置**：为所有配置方式添加 Oracle 配置示例
+- ✅ **连接池管理**：Oracle 专用连接池优化
+- ✅ **SQL 生成**：Oracle ALTER TABLE 语句生成支持
+- ✅ **数据导出/导入**：Oracle 兼容的数据导出和 SQL 文件执行
 
 ### v1.0.1
 

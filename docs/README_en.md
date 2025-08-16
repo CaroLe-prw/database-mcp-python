@@ -20,7 +20,7 @@ A powerful database MCP (Model Context Protocol) server with multi-data source m
 
 - ✅ MySQL / MariaDB
 - ✅ PostgreSQL
-- 🔄 Oracle (planned)
+- ✅ Oracle
 - 🔄 SQL Server (planned)
 
 ## Installation
@@ -86,24 +86,6 @@ datasources:
     maxCached: 10
     maxConnections: 100
 
-  # Analytics database
-  analytics_db:
-    type: mysql
-    host: 192.168.1.20
-    port: 3306
-    user: analyst
-    password: analyst_password
-    database: analytics_db
-
-  # Test database
-  test_db:
-    type: mysql
-    host: localhost
-    port: 3306
-    user: test_user
-    password: test_password
-    database: test_db
-
   # PostgreSQL database
   postgres_db:
     type: postgresql  # use 'postgresql' 
@@ -116,6 +98,19 @@ datasources:
     minCached: 5
     maxCached: 10
     maxConnections: 20
+
+  # Oracle database
+  oracle_db:
+    type: oracle
+    host: localhost
+    port: 1521
+    user: system
+    password: oracle_password
+    database: xe  # Oracle database name (service name)
+    # Optional: connection pool settings
+    minCached: 2
+    maxCached: 8
+    maxConnections: 15
 
 # Default data source
 default: main_db
@@ -250,12 +245,12 @@ Edit Cursor configuration file:
         "database-mcp-server"
       ],
       "env": {
-        "db_type": "postgresql",
+        "db_type": "oracle",
         "host": "localhost",
-        "port": "5432",
-        "user": "postgres",
+        "port": "1521",
+        "user": "system",
         "password": "password",
-        "database": "my_database"
+        "database": "xe"
       }
     }
   }
@@ -442,6 +437,14 @@ MIT License
 Issues and Pull Requests are welcome!
 
 ## Changelog
+
+### v1.0.2
+
+- ✅ **Oracle Database Support**: Full Oracle database support implementation
+- ✅ **Enhanced Configuration**: Added Oracle configuration examples for all setup methods
+- ✅ **Connection Pooling**: Oracle-specific connection pool optimization
+- ✅ **SQL Generation**: Oracle ALTER TABLE statement generation support
+- ✅ **Data Export/Import**: Oracle-compatible data export and SQL file execution
 
 ### v1.0.1
 
