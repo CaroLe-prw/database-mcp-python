@@ -21,7 +21,25 @@
 - ✅ MySQL / MariaDB
 - ✅ PostgreSQL
 - ✅ Oracle
+- ✅ SQLite
 - 🔄 SQL Server（计划中）
+
+## 依赖要求
+
+### 必需依赖
+
+- **Python 3.7+**
+- **MySQL/MariaDB**: `mysql-connector-python`（自动安装）
+- **PostgreSQL**: `psycopg2-binary`（自动安装）
+- **Oracle**: `oracledb>=2.0.0`（自动安装）- Oracle 瘦客户端，无需安装 Oracle Client
+- **SQLite**: Python 内置支持，无需额外依赖
+- **连接池**: `DBUtils`（自动安装）
+
+### 数据库驱动说明
+
+- **Oracle**: 使用新的 `oracledb` 驱动的瘦模式，无需安装 Oracle Client
+- **SQLite**: 使用 Python 内置的 `sqlite3` 模块，支持连接池
+- **MySQL/PostgreSQL**: 标准驱动，功能完整
 
 ## 安装
 
@@ -129,6 +147,15 @@ datasources:
     minCached: 2
     maxCached: 8
     maxConnections: 15
+
+  # SQLite 数据库
+  sqlite_db:
+    type: sqlite
+    database: /path/to/database.db  # SQLite 数据库文件路径
+    # 可选：连接池配置
+    minCached: 1
+    maxCached: 10
+    maxConnections: 100
 
 # 默认数据源
 default: main_db
@@ -358,14 +385,18 @@ database-mcp-python/
 │   │   ├── __init__.py
 │   │   ├── database_strategy.py     # 抽象数据库策略基类
 │   │   ├── mysql_strategy.py        # MySQL 策略实现
-│   │   └── postgresql_strategy.py   # PostgreSQL 策略实现
+│   │   ├── oracle_strategy.py       # Oracle 策略实现
+│   │   ├── postgresql_strategy.py   # PostgreSQL 策略实现
+│   │   └── sqlite_strategy.py       # SQLite 策略实现
 │   ├── model/                       # 数据模型定义
 │   │   ├── __init__.py
 │   │   └── database_config.py       # 数据库配置模型
 │   └── tools/                       # 工具类和辅助函数
 │       ├── common_tools.py          # 通用数据库工具方法
 │       ├── mysql_tools.py           # MySQL SQL 生成工具方法
-│       └── postgresql_tools.py      # PostgreSQL SQL 生成工具方法
+│       ├── oracle_tools.py          # Oracle SQL 生成工具方法
+│       ├── postgresql_tools.py      # PostgreSQL SQL 生成工具方法
+│       └── sqlite_tools.py          # SQLite SQL 生成工具方法
 ├── test/                            # 测试目录
 │   └── test_datasource.py           # 综合测试脚本
 ├── database-config.example.yaml    # 配置文件示例
@@ -456,9 +487,17 @@ MIT License
 
 ## 更新日志
 
+### v1.0.3
+
+- ✅ **SQLite 数据库支持**：完整的 SQLite 数据库支持实现
+- ✅ **增强文档**：添加全面的英文方法文档
+- ✅ **代码质量改进**：为 Oracle 添加缺失的 parse_table_structure 方法
+- ✅ **配置更新**：为所有配置方式添加 SQLite 配置示例
+- ✅ **连接池管理**：SQLite 专用连接池，支持 check_same_thread=False
+
 ### v1.0.2
 
-- ✅ **Oracle 数据库支持**：完整的 Oracle 数据库支持实现
+- ✅ **Oracle 数据库支持**：完整的 Oracle 数据库支持实现，使用 oracledb 驱动
 - ✅ **增强配置**：为所有配置方式添加 Oracle 配置示例
 - ✅ **连接池管理**：Oracle 专用连接池优化
 - ✅ **SQL 生成**：Oracle ALTER TABLE 语句生成支持

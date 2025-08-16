@@ -1,12 +1,12 @@
 from src.tools.common_tools import CommonDatabaseTools
 
 
-class OracleTools(CommonDatabaseTools):
+class SQLiteTools(CommonDatabaseTools):
 
     @staticmethod
     def compare_columns(my_structure: dict, other_structure: dict) -> tuple:
         """
-        Compare column structures between two Oracle table schemas.
+        Compare column structures between two table schemas.
         
         Args:
             my_structure: Dictionary containing current table structure
@@ -38,7 +38,7 @@ class OracleTools(CommonDatabaseTools):
     @staticmethod
     def generate_add_column_sql(table_name: str, col_name: str, col_info: dict) -> str:
         """
-        Generate SQL statement to add a new column to Oracle table.
+        Generate SQL statement to add a new column to SQLite table.
         
         Args:
             table_name: Name of the table
@@ -46,10 +46,10 @@ class OracleTools(CommonDatabaseTools):
             col_info: Dictionary containing column information (type, nullable, default)
             
         Returns:
-            ALTER TABLE ADD SQL statement string
+            ALTER TABLE SQL statement string
         """
         col_type = col_info['type']
-        nullable = 'NULL' if col_info['nullable'] == 'YES' else 'NOT NULL'
+        nullable = '' if col_info['nullable'] == 'YES' else 'NOT NULL'
         default_val = col_info.get('default', '')
 
         if default_val and default_val != 'NULL':
@@ -57,12 +57,12 @@ class OracleTools(CommonDatabaseTools):
         else:
             default_clause = ""
 
-        return f"ALTER TABLE {table_name} ADD {col_name} {col_type} {default_clause} {nullable}"
+        return f"ALTER TABLE {table_name} ADD COLUMN {col_name} {col_type}{default_clause} {nullable}".strip()
 
     @staticmethod
     def generate_modify_column_sql(table_name: str, col_name: str, col_info: dict) -> str:
         """
-        Generate SQL statement to modify an existing column in Oracle table.
+        Generate SQL comment for column modification (SQLite doesn't support ALTER COLUMN).
         
         Args:
             table_name: Name of the table
@@ -70,10 +70,12 @@ class OracleTools(CommonDatabaseTools):
             col_info: Dictionary containing column information (type, nullable, default)
             
         Returns:
-            ALTER TABLE MODIFY SQL statement string
+            Comment string explaining manual table recreation requirement
         """
+        # SQLite doesn't support ALTER COLUMN directly
+        # This would require table recreation in real scenarios
         col_type = col_info['type']
-        nullable = 'NULL' if col_info['nullable'] == 'YES' else 'NOT NULL'
+        nullable = '' if col_info['nullable'] == 'YES' else 'NOT NULL'
         default_val = col_info.get('default', '')
 
         if default_val and default_val != 'NULL':
@@ -81,18 +83,18 @@ class OracleTools(CommonDatabaseTools):
         else:
             default_clause = ""
 
-        return f"ALTER TABLE {table_name} MODIFY {col_name} {col_type} {default_clause} {nullable}"
+        return f"-- SQLite does not support ALTER COLUMN. Manual table recreation required for: {col_name} {col_type}{default_clause} {nullable}".strip()
 
     @staticmethod
     def format_value_for_sql(value) -> str:
         """
-        Format a Python value for use in Oracle SQL statements.
+        Format a Python value for use in SQLite SQL statements.
         
         Args:
             value: Python value to format (None, str, int, float, bytes, etc.)
             
         Returns:
-            Formatted string suitable for Oracle SQL insertion
+            Formatted string suitable for SQL insertion
         """
         if value is None:
             return 'NULL'
@@ -102,76 +104,61 @@ class OracleTools(CommonDatabaseTools):
         elif isinstance(value, (int, float)):
             return str(value)
         elif isinstance(value, bytes):
+            # SQLite BLOB handling
             hex_str = value.hex()
-            return f"HEXTORAW('{hex_str}')"
+            return f"X'{hex_str}'"
         else:
             return f"'{str(value)}'"
 
     @staticmethod
-    def get_data_type_mapping(oracle_type: str) -> str:
+    def get_data_type_mapping(sqlite_type: str) -> str:
         """
-        Map Oracle data types to standardized type names with precision/scale.
+        Map SQLite data types to standardized type names.
         
         Args:
-            oracle_type: Raw Oracle data type string (e.g., 'NUMBER(10,2)', 'VARCHAR2(100)')
+            sqlite_type: Raw SQLite data type string
             
         Returns:
-            Standardized Oracle data type name with proper formatting
+            Standardized data type name (INTEGER, TEXT, BLOB, REAL, NUMERIC)
         """
-        type_lower = oracle_type.lower()
+        type_lower = sqlite_type.lower()
 
-        if 'number' in type_lower:
-            if '(' in type_lower:
-                precision_scale = type_lower[type_lower.index('('):type_lower.index(')') + 1]
-                if ',' in precision_scale and ',0)' not in precision_scale:
-                    return f"NUMBER{precision_scale}"
-                else:
-                    return f"NUMBER{precision_scale}"
-            return 'NUMBER'
-        elif 'varchar2' in type_lower:
-            return oracle_type.upper()
-        elif 'char' in type_lower:
-            return oracle_type.upper()
-        elif 'date' in type_lower:
-            return 'DATE'
-        elif 'timestamp' in type_lower:
-            return oracle_type.upper()
-        elif 'clob' in type_lower:
-            return 'CLOB'
+        if 'int' in type_lower:
+            return 'INTEGER'
+        elif 'char' in type_lower or 'clob' in type_lower or 'text' in type_lower:
+            return 'TEXT'
         elif 'blob' in type_lower:
             return 'BLOB'
-        elif 'raw' in type_lower:
-            return oracle_type.upper()
-        elif 'long' in type_lower:
-            return 'LONG'
-        elif 'float' in type_lower:
-            return 'FLOAT'
+        elif 'real' in type_lower or 'floa' in type_lower or 'doub' in type_lower:
+            return 'REAL'
+        elif 'numeric' in type_lower or 'decimal' in type_lower:
+            return 'NUMERIC'
         else:
-            return oracle_type.upper()
+            return sqlite_type.upper()
 
     @staticmethod
     def parse_table_structure(columns: list) -> dict:
         """
-        Parse Oracle table structure information into standardized format.
+        Parse SQLite table structure information into standardized format.
         
         Args:
-            columns: List of tuples from Oracle system tables query containing:
-                    (column_name, column_type, is_nullable, column_key, 
-                     column_default, extra, column_comment)
-                     
+            columns: List of tuples from SQLite system tables query containing:
+                    (column_name, column_comment, data_type, column_type, 
+                     column_default, column_key, is_nullable, extra)
+            
         Returns:
             Dictionary with column names as keys and column attribute dictionaries as values.
             Each column dict contains: type, nullable, key, default, extra, comment
         """
         structure = {}
         for col in columns:
-            # Oracle query returns: column_name, column_type, is_nullable, column_key, column_default, extra, column_comment
+            # SQLite query returns: column_name, column_comment, data_type, column_type, column_default, column_key, is_nullable, extra
             structure[col[0]] = {
-                'type': OracleTools.get_data_type_mapping(col[1]),
-                'nullable': col[2],
-                'key': col[3] or '',
+                'type': SQLiteTools.get_data_type_mapping(col[3] or col[2]),  # Use column_type or fallback to data_type
+                'nullable': col[6],
+                'key': col[5] or '',
                 'default': str(col[4]).strip() if col[4] is not None else 'NULL',
-                'extra': col[5] or '',
-                'comment': col[6] or ''
+                'extra': col[7] or '',
+                'comment': col[1] or ''
             }
         return structure

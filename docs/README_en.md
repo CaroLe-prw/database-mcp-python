@@ -21,7 +21,25 @@ A powerful database MCP (Model Context Protocol) server with multi-data source m
 - ✅ MySQL / MariaDB
 - ✅ PostgreSQL
 - ✅ Oracle
+- ✅ SQLite
 - 🔄 SQL Server (planned)
+
+## Dependencies
+
+### Required Dependencies
+
+- **Python 3.7+**
+- **MySQL/MariaDB**: `mysql-connector-python` (auto-installed)
+- **PostgreSQL**: `psycopg2-binary` (auto-installed)
+- **Oracle**: `oracledb>=2.0.0` (auto-installed) - Oracle Thin client, no Oracle Client required
+- **SQLite**: Built-in Python support, no additional dependencies required
+- **Connection Pooling**: `DBUtils` (auto-installed)
+
+### Database Driver Notes
+
+- **Oracle**: Uses the new `oracledb` driver in Thin mode, which doesn't require Oracle Client installation
+- **SQLite**: Uses Python's built-in `sqlite3` module with connection pooling support
+- **MySQL/PostgreSQL**: Standard drivers with full feature support
 
 ## Installation
 
@@ -111,6 +129,15 @@ datasources:
     minCached: 2
     maxCached: 8
     maxConnections: 15
+
+  # SQLite database
+  sqlite_db:
+    type: sqlite
+    database: /path/to/database.db  # SQLite database file path
+    # Optional: connection pool settings
+    minCached: 1
+    maxCached: 10
+    maxConnections: 100
 
 # Default data source
 default: main_db
@@ -340,14 +367,18 @@ database-mcp-python/
 │   │   ├── __init__.py
 │   │   ├── database_strategy.py     # Abstract database strategy base class
 │   │   ├── mysql_strategy.py        # MySQL strategy implementation
-│   │   └── postgresql_strategy.py   # PostgreSQL strategy implementation
+│   │   ├── oracle_strategy.py       # Oracle strategy implementation
+│   │   ├── postgresql_strategy.py   # PostgreSQL strategy implementation
+│   │   └── sqlite_strategy.py       # SQLite strategy implementation
 │   ├── model/                       # Data model definitions
 │   │   ├── __init__.py
 │   │   └── database_config.py       # Database configuration model
 │   └── tools/                       # Utility tools and helpers
 │       ├── common_tools.py          # Common database utility methods
 │       ├── mysql_tools.py           # MySQL SQL generation utility methods
-│       └── postgresql_tools.py      # PostgreSQL SQL generation utility methods
+│       ├── oracle_tools.py          # Oracle SQL generation utility methods
+│       ├── postgresql_tools.py      # PostgreSQL SQL generation utility methods
+│       └── sqlite_tools.py          # SQLite SQL generation utility methods
 ├── test/                            # Test directory
 │   └── test_datasource.py           # Comprehensive testing script
 ├── database-config.example.yaml    # Configuration file example
@@ -438,9 +469,17 @@ Issues and Pull Requests are welcome!
 
 ## Changelog
 
+### v1.0.3
+
+- ✅ **SQLite Database Support**: Complete SQLite database support implementation
+- ✅ **Enhanced Documentation**: Added comprehensive English method documentation
+- ✅ **Code Quality Improvements**: Added missing parse_table_structure method for Oracle
+- ✅ **Configuration Updates**: Added SQLite configuration examples for all setup methods
+- ✅ **Connection Pooling**: SQLite-specific connection pool with check_same_thread=False
+
 ### v1.0.2
 
-- ✅ **Oracle Database Support**: Full Oracle database support implementation
+- ✅ **Oracle Database Support**: Full Oracle database support implementation with oracledb driver
 - ✅ **Enhanced Configuration**: Added Oracle configuration examples for all setup methods
 - ✅ **Connection Pooling**: Oracle-specific connection pool optimization
 - ✅ **SQL Generation**: Oracle ALTER TABLE statement generation support

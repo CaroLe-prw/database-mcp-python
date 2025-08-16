@@ -64,16 +64,24 @@ datasources:
     maxCached: 10
     maxConnections: 100
 
+  sqlite_db:
+    type: sqlite
+    database: /path/to/database.db  # SQLite 数据库文件路径
+    # 可选：连接池配置
+    minCached: 1
+    maxCached: 10
+    maxConnections: 100
+
 # 默认数据源（必须是上面定义的数据源之一）
 default: admin_db
 
 # 配置说明：
-# 1. type: 数据库类型，支持 mysql, postgresql , oracle
-# 2. host: 数据库主机地址
-# 3. port: 数据库端口
-# 4. user: 数据库用户名
-# 5. password: 数据库密码
-# 6. database: 默认数据库名
+# 1. type: 数据库类型，支持 mysql, postgresql, oracle, sqlite
+# 2. host: 数据库主机地址（SQLite不需要）
+# 3. port: 数据库端口（SQLite不需要）
+# 4. user: 数据库用户名（SQLite不需要）
+# 5. password: 数据库密码（SQLite不需要）
+# 6. database: 数据库名（SQLite为文件路径）
 # 7. minCached: （可选）连接池最小缓存连接数
 # 8. maxCached: （可选）连接池最大缓存连接数
 # 9. maxConnections: （可选）最大连接数

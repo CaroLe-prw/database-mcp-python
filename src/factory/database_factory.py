@@ -1,7 +1,7 @@
 from typing import Dict, Type
 
 from src.model import DatabaseConfig
-from src.strategy import DatabaseStrategy, MySQLStrategy, PostgreSQLStrategy, OracleStrategy
+from src.strategy import DatabaseStrategy, MySQLStrategy, PostgreSQLStrategy, OracleStrategy, SQLiteStrategy
 
 
 class DatabaseStrategyFactory:
@@ -9,6 +9,7 @@ class DatabaseStrategyFactory:
         "mysql": MySQLStrategy,
         "postgresql": PostgreSQLStrategy,
         "oracle": OracleStrategy,
+        "sqlite": SQLiteStrategy,
     }
 
     @classmethod
