@@ -1,19 +1,19 @@
 [project]
 name = "database-mcp-server"
-version = "1.0.2"
+version = "1.0.3"
 description = "Database MCP Server for SQL operations"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "dbutils>=3.1.1",
-    "fastmcp>=2.11.0",
-    "mcp[cli]>=1.12.2",
-    "pymysql>=1.1.1",
-    "psycopg2-binary>=2.9.9",
-    "python-dotenv>=1.1.1",
-    "pyyaml>=6.0.1",
-    "psycopg2>=2.9.10",
-    "oracledb>=2.0.0",
+    "dbutils>=3.1.2",
+    "fastmcp>=3.1.1",
+    "mcp[cli]>=1.26.0",
+    "pymysql>=1.1.2",
+    "psycopg2-binary>=2.9.11",
+    "python-dotenv>=1.2.2",
+    "pyyaml>=6.0.3",
+    "psycopg2>=2.9.11",
+    "oracledb>=3.4.2",
 ]
 
 [project.scripts]
