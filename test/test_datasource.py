@@ -126,7 +126,7 @@ def execute_sql_file(
 
 
 def main():
-    print(compare_table_structure('order', 'postgresql_test_db', 'postgresql_db', generate_sql=True))
+    print(describe_table('approvals'))
 
 
 if __name__ == "__main__":

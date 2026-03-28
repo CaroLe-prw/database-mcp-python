@@ -1,12 +1,13 @@
 # 数据源配置
 datasources:
   postgres_db:
-    type: postgresql  
+    type: postgresql
     host: 47.115.204.146
     port: 5432
     user: CaroLe
     password: Aa040832@
-    database: openfactory 
+    database: openfactory
+    schema: public
     minCached: 5
     maxCached: 10
     maxConnections: 20

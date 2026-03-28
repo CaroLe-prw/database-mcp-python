@@ -34,7 +34,8 @@ datasources:
     port: 5432
     user: root
     password: Aa040832@
-    database: public
+    database: postgres
+    schema: public  # 可选：PostgreSQL schema，默认 public
     # 可选：连接池配置
     minCached: 1
     maxCached: 10
@@ -46,7 +47,8 @@ datasources:
     port: 5432
     user: root
     password: Aa040832@
-    database: test
+    database: postgres
+    schema: test  # 可选：PostgreSQL schema，默认 public
     # 可选：连接池配置
     minCached: 1
     maxCached: 10
@@ -82,9 +84,10 @@ default: admin_db
 # 4. user: 数据库用户名（SQLite不需要）
 # 5. password: 数据库密码（SQLite不需要）
 # 6. database: 数据库名（SQLite为文件路径）
-# 7. minCached: （可选）连接池最小缓存连接数
-# 8. maxCached: （可选）连接池最大缓存连接数
-# 9. maxConnections: （可选）最大连接数
+# 7. schema: （可选）PostgreSQL schema名，默认 public
+# 8. minCached: （可选）连接池最小缓存连接数
+# 9. maxCached: （可选）连接池最大缓存连接数
+# 10. maxConnections: （可选）最大连接数
 
 # 使用方式：
 # 1. 复制此文件为 database-config.yaml

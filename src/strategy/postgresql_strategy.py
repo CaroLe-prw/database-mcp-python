@@ -16,28 +16,30 @@ class PostgreSQLStrategy(DatabaseStrategy):
     def __init__(self, config: DatabaseConfig):
         super().__init__(config)
         self.pool = None
+        self.schema = config.schema or 'public'
 
     def create_pool(self) -> PooledDB:
         if not self.pool:
-            # Connect to postgres database by default, then use schema
             self.pool = PooledDB(
                 creator=psycopg2,
                 host=self.config.host,
                 port=self.config.port,
                 user=self.config.user,
                 password=self.config.password,
-                database='postgres',  # Connect to default postgres database
+                database=self.config.database,
                 mincached=self.config.minCached or 5,
                 maxcached=self.config.maxCached or 10,
                 maxconnections=self.config.maxConnections or 20,
-                dsn=f"host={self.config.host} port={self.config.port} user={self.config.user} password={self.config.password} dbname=postgres options='-c search_path={self.config.database}'"
             )
         return self.pool
 
     def get_connection(self):
         if not self.pool:
             self.create_pool()
-        return self.pool.connection()
+        conn = self.pool.connection()
+        with conn.cursor() as cur:
+            cur.execute("SET search_path TO %s", (self.schema,))
+        return conn
 
     def close_connection(self, connection: object) -> None:
         if connection:
@@ -57,7 +59,7 @@ class PostgreSQLStrategy(DatabaseStrategy):
                     WHERE t.schemaname = %s
                     ORDER BY t.tablename
                     """,
-                    (self.config.database,)
+                    (self.schema,)
                 )
                 tables = cursor.fetchall()
 
@@ -107,7 +109,7 @@ class PostgreSQLStrategy(DatabaseStrategy):
                       AND NOT a.attisdropped
                     ORDER BY a.attnum
                     """,
-                    (table_name, self.config.database)
+                    (table_name, self.schema)
                 )
                 table_infos = cursor.fetchall()
 
@@ -336,13 +338,13 @@ class PostgreSQLStrategy(DatabaseStrategy):
                       AND NOT a.attisdropped
                     ORDER BY a.attnum
                     """,
-                    (table_name, self.config.database)
+                    (table_name, self.schema)
                 )
 
                 columns = cursor.fetchall()
 
                 if not columns:
-                    raise ValueError(f"Table '{table_name}' does not exist in database '{self.config.database}'")
+                    raise ValueError(f"Table '{table_name}' does not exist in schema '{self.schema}'")
 
                 return PostgreSQLTools.parse_table_structure(columns)
 
